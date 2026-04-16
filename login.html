@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login — NSUK PlugMe</title>
+  <link rel="stylesheet" href="css/app.css"/>
+</head>
+<body>
+
+<div class="auth-page">
+
+  <!-- Left panel -->
+  <div class="auth-left">
+    <div class="auth-left-inner">
+      <div class="auth-brand">
+        <div class="auth-logo-mark">P</div>
+        <span class="auth-brand-name">PlugMe</span>
+      </div>
+      <h1 class="auth-headline">Welcome back to NSUK's campus marketplace</h1>
+      <p class="auth-tagline">Jobs posted. Offers placed. Chat opened. All in one system built for NSUK.</p>
+      <div class="auth-features">
+        <div class="auth-feature">
+          <div class="auth-feature-icon">⚡</div>
+          <span class="auth-feature-text">Post a job in under 60 seconds</span>
+        </div>
+        <div class="auth-feature">
+          <div class="auth-feature-icon">💬</div>
+          <span class="auth-feature-text">Chat auto-created when offer is accepted</span>
+        </div>
+        <div class="auth-feature">
+          <div class="auth-feature-icon">💰</div>
+          <span class="auth-feature-text">Workers earn consistently on campus</span>
+        </div>
+        <div class="auth-feature">
+          <div class="auth-feature-icon">🔒</div>
+          <span class="auth-feature-text">Verified NSUK users only — safe & trusted</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right panel: form -->
+  <div class="auth-right">
+    <div class="auth-card">
+      <h2 class="auth-card-title">Sign in</h2>
+      <p class="auth-card-sub">Enter your email and password to continue.</p>
+
+      <div class="alert alert-error" id="loginError">
+        <span>⚠️</span>
+        <span id="loginErrorMsg">Invalid credentials</span>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="email">Email Address</label>
+        <input class="form-input" type="email" id="email" placeholder="you@nsuk.edu.ng" autocomplete="email"/>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="password">Password</label>
+        <input class="form-input" type="password" id="password" placeholder="Enter your password" autocomplete="current-password"/>
+      </div>
+
+      <button class="btn btn-blue btn-full btn-lg" id="loginBtn" onclick="handleLogin()">
+        Sign In
+      </button>
+
+      <div class="auth-footer-link" style="margin-top:24px;">
+        Don't have an account? <a href="register.html">Create one →</a>
+      </div>
+      <div class="auth-footer-link" style="margin-top:10px;">
+        <a href="index.html">← Back to home</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="js/api.js"></script>
+<script>
+  // Redirect if already logged in
+  if (window.PlugMe?.Auth.isLoggedIn()) {
+    window.location.href = 'app.html';
+  }
+
+  // Allow Enter key
+  document.getElementById('password').addEventListener('keydown', e => {
+    if (e.key === 'Enter') handleLogin();
+  });
+
+  async function handleLogin() {
+    const email    = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const btn      = document.getElementById('loginBtn');
+    const errBox   = document.getElementById('loginError');
+    const errMsg   = document.getElementById('loginErrorMsg');
+
+    if (!email || !password) {
+      errMsg.textContent = 'Please enter your email and password.';
+      errBox.classList.add('show');
+      return;
+    }
+
+    btn.disabled    = true;
+    btn.textContent = 'Signing in...';
+    errBox.classList.remove('show');
+
+    try {
+      const res = await window.PlugMe.authAPI.login({ email, password });
+      window.PlugMe.Auth.setTokens(res.token, res.refreshToken);
+      window.PlugMe.Auth.setUser(res.data.user);
+      window.location.href = 'app.html';
+    } catch (err) {
+      errMsg.textContent = err.message || 'Login failed — check your credentials.';
+      errBox.classList.add('show');
+      btn.disabled    = false;
+      btn.textContent = 'Sign In';
+    }
+  }
+</script>
+
+</body>
+</html>

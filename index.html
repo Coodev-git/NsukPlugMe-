@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="NSUK PlugMe — Campus marketplace connecting students with trusted campus workers. Post jobs, place bids, auto-chat, get paid." />
+  <meta name="theme-color" content="#2563eb" />
+  <meta property="og:title"       content="NSUK PlugMe — Get Anything Done On Campus" />
+  <meta property="og:description" content="Post jobs. Get offers. Auto-chat. Get it done — or get paid doing it." />
+  <meta property="og:type"        content="website" />
+  <title>NSUK PlugMe — Get Anything Done On Campus</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- ============================================================
+     MOBILE OVERLAY
+     ============================================================ -->
+<div class="mobile-menu" id="mobileMenu" role="dialog" aria-modal="true" aria-label="Navigation">
+  <button class="mobile-close" id="mobileClose" aria-label="Close">✕</button>
+  <a href="#how">How It Works</a>
+  <a href="#features">Features</a>
+  <a href="#unlock">₦99 Unlock</a>
+  <a href="#who">Who It's For</a>
+  <a href="#flow">System Flow</a>
+  <a href="#trust">Trust</a>
+  <div class="mobile-actions">
+    <a href="register.html" class="btn btn-blue">I Need Help</a>
+    <a href="register.html?role=worker" class="btn btn-green">Start Earning</a>
+  </div>
+</div>
+
+<!-- ============================================================
+     NAVBAR
+     ============================================================ -->
+<nav class="navbar" role="navigation" aria-label="Main navigation">
+  <div class="container">
+    <div class="nav-inner">
+
+      <a href="#" class="nav-logo" aria-label="PlugMe Home">
+        <div class="logo-mark">P</div>
+        <span class="logo-text">Plug<span>Me</span></span>
+      </a>
+
+      <ul class="nav-links" role="list">
+        <li><a href="#how">How It Works</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#unlock">₦99 Unlock</a></li>
+        <li><a href="#who">Who It's For</a></li>
+        <li><a href="#flow">System</a></li>
+        <li><a href="#trust">Trust</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <a href="login.html" class="btn btn-outline">I Need Help</a>
+        <a href="register.html?role=worker" class="btn btn-green">Start Earning</a>
+      </div>
+
+      <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+<section class="hero" id="home">
+  <div class="hero-bg">
+    <div class="hero-gradient"></div>
+    <div class="hero-dots"></div>
+    <div class="hero-blob hero-blob-1"></div>
+    <div class="hero-blob hero-blob-2"></div>
+  </div>
+
+  <div class="container">
+    <div class="hero-content">
+
+      <!-- Copy -->
+      <div class="hero-left">
+        <div class="hero-badge">
+          <div class="badge-dot"></div>
+          Built for <span id="typeTarget">NSUK Students</span>
+        </div>
+
+        <h1 class="hero-title">
+          Get <span class="hl-blue">Anything Done</span>
+          on Campus — Or Get
+          <span class="hl-green">Paid</span> Doing It
+        </h1>
+
+        <p class="hero-sub">
+          NSUK PlugMe connects students who need help with trusted campus
+          workers — fast, safe, and reliable. Post a job in seconds,
+          get matched instantly.
+        </p>
+
+        <div class="hero-ctas">
+          <a href="register.html" class="btn btn-blue btn-lg">🔵 I Need Help</a>
+          <a href="register.html?role=worker" class="btn btn-green btn-lg">🟢 I Want to Earn</a>
+        </div>
+
+        <div class="hero-stats">
+          <div>
+            <div class="stat-num" data-target="500" data-suffix="+">500+</div>
+            <div class="stat-label">Active Students</div>
+          </div>
+          <div class="stat-divider"></div>
+          <div>
+            <div class="stat-num" data-target="200" data-suffix="+">200+</div>
+            <div class="stat-label">Campus Workers</div>
+          </div>
+          <div class="stat-divider"></div>
+          <div>
+            <div class="stat-num" data-target="98" data-suffix="%">98%</div>
+            <div class="stat-label">Jobs Completed</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phone mockup + floats -->
+      <div class="hero-right" aria-hidden="true">
+
+        <!-- Floating cards -->
+        <div class="float-card fc-1 glass">
+          <div class="float-icon fi-blue">🧺</div>
+          <div>
+            <div>Laundry Run</div>
+            <div class="float-meta">₦500 · 2 offers</div>
+          </div>
+        </div>
+        <div class="float-card fc-2 glass">
+          <div class="float-icon fi-orange">🛵</div>
+          <div>
+            <div>Food Delivery</div>
+            <div class="float-meta">₦300 · 4 offers</div>
+          </div>
+        </div>
+        <div class="float-card fc-3 glass">
+          <div class="float-icon fi-purple">💻</div>
+          <div>
+            <div>Tech Help</div>
+            <div class="float-meta">₦1,200 · 1 offer</div>
+          </div>
+        </div>
+        <div class="float-card fc-4 glass">
+          <div class="float-icon fi-green">✂️</div>
+          <div>
+            <div>Haircut</div>
+            <div class="float-meta">₦800 · 3 offers</div>
+          </div>
+        </div>
+
+        <!-- Phone -->
+        <div class="hero-phone">
+          <div class="phone-screen">
+            <div class="phone-header">
+              <div class="phone-header-top">
+                <span class="phone-app-name">⚡ PlugMe</span>
+                <span class="phone-pill">NSUK</span>
+              </div>
+              <div class="phone-greet">
+                Good afternoon,
+                <strong>Covenant 👋</strong>
+              </div>
+            </div>
+
+            <div class="phone-body">
+              <p class="phone-section-label">Jobs Near You</p>
+
+              <div class="phone-card">
+                <div class="phone-card-icon ic-blue">🧺</div>
+                <div class="phone-card-info">
+                  <div class="phone-card-title">Laundry — Faculty</div>
+                  <div class="phone-card-meta">100m · ₦500</div>
+                </div>
+                <span class="phone-badge pb-open">Open</span>
+              </div>
+
+              <div class="phone-card">
+                <div class="phone-card-icon ic-green">💻</div>
+                <div class="phone-card-info">
+                  <div class="phone-card-title">Fix laptop · Win 11</div>
+                  <div class="phone-card-meta">Block C · ₦1,500</div>
+                </div>
+                <span class="phone-badge pb-progress">Active</span>
+              </div>
+
+              <div class="phone-card">
+                <div class="phone-card-icon ic-orange">📦</div>
+                <div class="phone-card-info">
+                  <div class="phone-card-title">Print 20 pages</div>
+                  <div class="phone-card-meta">Library · ₦400</div>
+                </div>
+                <span class="phone-badge pb-open">Open</span>
+              </div>
+
+              <div class="phone-chat-bar">
+                <div class="chat-dot"></div>
+                Chat auto-created — offer accepted ✓
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div><!-- /hero-content -->
+  </div>
+</section>
+
+
+<!-- ============================================================
+     HOW IT WORKS
+     ============================================================ -->
+<section class="section how" id="how">
+  <div class="container">
+    <div class="text-center reveal">
+      <div class="section-tag tag-gray">⚙️ Process</div>
+      <h2 class="section-title">How PlugMe Works</h2>
+      <p class="section-sub">
+        Two sides, one platform. Need something done or want to earn?
+        Under 2 minutes to get started.
+      </p>
+    </div>
+
+    <div class="how-grid">
+
+      <!-- Students -->
+      <div class="how-panel reveal">
+        <div class="how-panel-head hph-blue">
+          <div class="how-panel-icon hpi-blue">🎓</div>
+          <div>
+            <div class="how-panel-name hpn-blue">For Students</div>
+            <div class="how-panel-sub hps-blue">Need something done?</div>
+          </div>
+        </div>
+        <div class="how-steps">
+          <div class="how-step">
+            <div class="step-num sn-blue">1</div>
+            <div class="step-text">
+              <strong>Post What You Need</strong>
+              <span>Describe your task — laundry, delivery, tech help. AI improves it automatically before workers see it.</span>
+            </div>
+          </div>
+          <div class="how-step">
+            <div class="step-num sn-blue">2</div>
+            <div class="step-text">
+              <strong>Get Offers from Workers</strong>
+              <span>Nearby workers send bids with price, message, and ETA. See their ratings before choosing.</span>
+            </div>
+          </div>
+          <div class="how-step">
+            <div class="step-num sn-blue">3</div>
+            <div class="step-text">
+              <strong>Choose & Chat</strong>
+              <span>Accept an offer — a private chat room opens automatically. No manual setup. Just agree and go.</span>
+            </div>
+          </div>
+          <div class="how-step">
+            <div class="step-num sn-blue">4</div>
+            <div class="step-text">
+              <strong>Get It Done</strong>
+              <span>Track the job live. Confirm completion and rate your worker to build campus trust.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Workers -->
+      <div class="how-panel reveal">
+        <div class="how-panel-head hph-green">
+          <div class="how-panel-icon hpi-green">💼</div>
+          <div>
+            <div class="how-panel-name hpn-green">For Workers</div>
+            <div class="how-panel-sub hps-green">Want to earn on campus?</div>
+          </div>
+        </div>
+        <div class="how-steps">
+          <div class="how-step">
+            <div class="step-num sn-green">1</div>
+            <div class="step-text">
+              <strong>Browse Available Jobs</strong>
+              <span>See open jobs sorted by distance and pay. Filter by what you do best — hair, tech, delivery, food.</span>
+            </div>
+          </div>
+          <div class="how-step">
+            <div class="step-num sn-green">2</div>
+            <div class="step-text">
+              <strong>Accept or Place Bids</strong>
+              <span>Accept fixed-price jobs instantly or submit a custom bid with your own rate and timeline.</span>
+            </div>
+          </div>
+          <div class="how-step">
+            <div class="step-num sn-green">3</div>
+            <div class="step-text">
+              <strong>Chat with the Student</strong>
+              <span>Chat opens the moment your offer is accepted. Clarify details, then start working.</span>
+            </div>
+          </div>
+          <div class="how-step">
+            <div class="step-num sn-green">4</div>
+            <div class="step-text">
+              <strong>Get Paid</strong>
+              <span>Job complete → payment released → rating earned. Build your campus reputation job by job.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     CORE FEATURES
+     ============================================================ -->
+<section class="section features" id="features">
+  <div class="container">
+    <div class="text-center reveal">
+      <div class="section-tag tag-blue">✨ Features</div>
+      <h2 class="section-title">Built to Make Campus Life Easier</h2>
+      <p class="section-sub">
+        Every feature is designed around one goal — get things done
+        fast, safely, and without confusion.
+      </p>
+    </div>
+
+    <div class="features-grid">
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:linear-gradient(135deg,#fff7ed,#fed7aa);">⚡</div>
+        <div class="feature-name">Fast Requests</div>
+        <p class="feature-desc">Post anything — laundry, delivery, tech help — and start getting offers within minutes. No long forms.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:linear-gradient(135deg,#faf5ff,#ede9fe);">🤖</div>
+        <div class="feature-name">Smart AI Assistance</div>
+        <p class="feature-desc">Your request gets improved by AI before workers see it. Better clarity = better offers, faster.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:linear-gradient(135deg,#eff6ff,#dbeafe);">💬</div>
+        <div class="feature-name">Auto Chat Room</div>
+        <p class="feature-desc">Accept an offer — a private chat room opens instantly for both parties. Zero manual setup required.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);">📍</div>
+        <div class="feature-name">Campus Map</div>
+        <p class="feature-desc">See real-time job locations across NSUK. Workers find nearby jobs faster. Students get closer help.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:linear-gradient(135deg,#fef2f2,#fee2e2);">🔒</div>
+        <div class="feature-name">Safe Agreements</div>
+        <p class="feature-desc">Both sides confirm before work begins. Clear terms, no ambiguity, no scams — built-in protection.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon" style="background:linear-gradient(135deg,#fffbeb,#fef3c7);">⭐</div>
+        <div class="feature-name">Ratings & Trust</div>
+        <p class="feature-desc">Every worker's rating is built from real completed jobs. No fake reviews, no paying to rank higher.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     WHY THIS EXISTS (dark)
+     ============================================================ -->
+<section class="section why" id="why">
+  <div class="container">
+    <div class="why-inner">
+
+      <div class="why-text reveal-left">
+        <div class="section-tag tag-dark">💡 The Problem</div>
+        <h2 class="section-title">
+          Campus Has Talent. Campus Has Needs. They Just Never Meet.
+        </h2>
+        <p class="section-sub">
+          Every day on NSUK, students waste hours searching for help that's
+          right beside them — while workers with the exact skills sit idle with
+          no consistent way to earn. PlugMe ends that.
+        </p>
+      </div>
+
+      <div class="why-cards reveal-right">
+        <div class="why-card">
+          <div class="why-card-label wcl-problem">⚠️ The Problem</div>
+          <div class="why-card-text">
+            Students waste time and energy searching for reliable help on campus.
+            Workers with real, valuable skills — hair, tech, delivery — struggle
+            to find consistent jobs and steady income.
+          </div>
+        </div>
+        <div class="why-card solution">
+          <div class="why-card-label wcl-solution">✅ The Solution</div>
+          <div class="why-card-text">
+            PlugMe connects both sides — instantly, on campus. Students post.
+            Workers offer. Both agree. Work gets done.
+            <strong style="color:rgba(255,255,255,.92);display:block;margin-top:10px;">
+              No middlemen. No delays. No guessing.
+            </strong>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     WHO IT'S FOR
+     ============================================================ -->
+<section class="section who" id="who">
+  <div class="container">
+    <div class="text-center reveal">
+      <div class="section-tag tag-gray">👥 Audience</div>
+      <h2 class="section-title">Who PlugMe Is For</h2>
+      <p class="section-sub">Two types of people, one platform. Both win every time.</p>
+    </div>
+
+    <div class="who-grid">
+
+      <div class="who-card student reveal">
+        <div class="who-emoji">🎓</div>
+        <h3 class="who-title">Students</h3>
+        <p class="who-sub">You're busy. You need things done. You want someone you can trust.</p>
+        <div class="who-perks">
+          <div class="who-perk"><div class="perk-check">✓</div><span>Too busy with classes and assignments</span></div>
+          <div class="who-perk"><div class="perk-check">✓</div><span>Need quick help — laundry, printing, delivery, tech</span></div>
+          <div class="who-perk"><div class="perk-check">✓</div><span>Want verified, rated, trustworthy workers</span></div>
+          <div class="who-perk"><div class="perk-check">✓</div><span>Prefer to agree on price before committing</span></div>
+        </div>
+        <a href="register.html" class="btn btn-blue">I Need Help →</a>
+      </div>
+
+      <div class="who-card worker reveal">
+        <div class="who-emoji">💼</div>
+        <h3 class="who-title">Campus Workers</h3>
+        <p class="who-sub">You have skills. You want income. You need jobs to come to you.</p>
+        <div class="who-perks">
+          <div class="who-perk"><div class="perk-check">✓</div><span>Want to earn money right here on campus</span></div>
+          <div class="who-perk"><div class="perk-check">✓</div><span>Have skills: hair, tech, delivery, food, printing</span></div>
+          <div class="who-perk"><div class="perk-check">✓</div><span>Need consistent jobs — not just word of mouth</span></div>
+          <div class="who-perk"><div class="perk-check">✓</div><span>Want to build a reputation and grow earnings</span></div>
+        </div>
+        <a href="register.html?role=worker" class="btn btn-green">Start Earning →</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     CONTACT UNLOCK FEATURE — ₦99
+     ============================================================ -->
+<section class="section unlock" id="unlock">
+  <div class="container">
+    <div class="unlock-inner">
+
+      <!-- Left: copy -->
+      <div class="unlock-copy reveal-left">
+        <div class="unlock-price-badge">
+          <span class="amount">₦99</span>
+          <span class="label">· One-time unlock · Per worker</span>
+        </div>
+
+        <div class="section-tag tag-gold">📞 Premium Feature</div>
+        <h2 class="section-title">
+          Need to Call Directly?<br />Unlock Any Worker's Number.
+        </h2>
+        <p class="section-sub">
+          Sometimes you need to talk — right now. Skip the back-and-forth and
+          go straight to a phone call. Unlock any campus worker's contact
+          number for just ₦99.
+        </p>
+
+        <div class="unlock-bullets">
+          <div class="unlock-bullet">
+            <div class="ub-icon">⚡</div>
+            <div class="ub-text">
+              <strong>Instant Access</strong>
+              <span>Pay once, see the number immediately. No delays, no waiting for approval.</span>
+            </div>
+          </div>
+          <div class="unlock-bullet">
+            <div class="ub-icon">🔒</div>
+            <div class="ub-text">
+              <strong>Private & Controlled</strong>
+              <span>Numbers are hidden by default. Only you can see a number you unlocked — no one else.</span>
+            </div>
+          </div>
+          <div class="unlock-bullet">
+            <div class="ub-icon">🔁</div>
+            <div class="ub-text">
+              <strong>No Repeat Payment</strong>
+              <span>Unlock a worker once. That number stays accessible to you forever on that worker's profile.</span>
+            </div>
+          </div>
+          <div class="unlock-bullet">
+            <div class="ub-icon">📊</div>
+            <div class="ub-text">
+              <strong>Fully Tracked</strong>
+              <span>Every unlock is logged — student, worker, time, amount. Transparent for both parties.</span>
+            </div>
+          </div>
+        </div>
+
+        <a href="register.html" class="btn btn-gold btn-lg">🔓 Try Contact Unlock</a>
+      </div>
+
+      <!-- Right: mockup -->
+      <div class="unlock-mockup reveal-right">
+
+        <!-- Worker profile card -->
+        <div class="unlock-worker-card">
+          <div class="uwc-header">
+            <div class="uwc-avatar">👨🏾‍💻</div>
+            <div>
+              <div class="uwc-name">Emeka Okonkwo</div>
+              <div class="uwc-role">Tech Repair · Delivery</div>
+            </div>
+            <div class="uwc-rating">
+              <div class="stars">⭐⭐⭐⭐⭐</div>
+              <div class="score">4.9</div>
+            </div>
+          </div>
+
+          <div class="uwc-body">
+            <div class="uwc-skills">
+              <span class="skill-tag">Laptop Repair</span>
+              <span class="skill-tag">Phone Fix</span>
+              <span class="skill-tag">Delivery</span>
+              <span class="skill-tag">Print Jobs</span>
+            </div>
+
+            <!-- LOCKED STATE -->
+            <div class="uwc-contact-locked" id="lockedState">
+              <div class="uwc-lock-icon">🔒</div>
+              <div class="uwc-lock-text">
+                Emeka's phone number is locked.<br />
+                Unlock it for direct calling — one time only.
+              </div>
+              <button class="uwc-unlock-btn" id="unlockBtn">
+                🔓 Unlock for ₦99
+              </button>
+            </div>
+
+            <!-- UNLOCKED STATE (shown after demo click) -->
+            <div class="uwc-contact-unlocked" id="unlockedState">
+              <div class="uwc-unlocked-top">
+                <span class="uwc-unlocked-icon">✅</span>
+                <span class="uwc-unlocked-label">Contact Unlocked — ₦99 paid</span>
+              </div>
+              <div class="uwc-phone-num">0812 345 6789</div>
+              <button class="uwc-call-btn">📞 Call Emeka Now</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- How it works mini steps -->
+        <div class="unlock-steps">
+          <div class="unlock-steps-title">How Unlock Works</div>
+          <div class="unlock-step-row">
+            <div class="usr-num">1</div>
+            <span>Find a worker you want to contact directly</span>
+          </div>
+          <div class="unlock-step-row">
+            <div class="usr-num">2</div>
+            <span>Tap "Unlock for ₦99" on their profile</span>
+          </div>
+          <div class="unlock-step-row">
+            <div class="usr-num">3</div>
+            <span>Payment is processed &amp; verified instantly</span>
+          </div>
+          <div class="unlock-step-row">
+            <div class="usr-num">4</div>
+            <span>Number revealed — saved to your account permanently</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     ADVANCED FEATURES
+     ============================================================ -->
+<section class="section advanced" id="advanced">
+  <div class="container">
+    <div class="text-center reveal">
+      <div class="section-tag tag-green">🔧 Under the Hood</div>
+      <h2 class="section-title">The Full Platform</h2>
+      <p class="section-sub">
+        The features that make PlugMe a real system — not just a chat app.
+      </p>
+    </div>
+
+    <div class="advanced-grid">
+
+      <div class="adv-card">
+        <div class="adv-icon">🤖</div>
+        <div class="adv-name">AI Request Optimizer</div>
+        <p class="adv-desc">Student's job post gets rewritten by AI for clarity before workers see it. Better posts = better, faster offers.</p>
+      </div>
+
+      <div class="adv-card">
+        <div class="adv-icon">💰</div>
+        <div class="adv-name">Smart Bidding System</div>
+        <p class="adv-desc">Workers submit competitive bids with custom prices and ETAs. Students compare and pick the best deal.</p>
+      </div>
+
+      <div class="adv-card">
+        <div class="adv-icon">📊</div>
+        <div class="adv-name">Earnings Dashboard</div>
+        <p class="adv-desc">Workers track total earned, active jobs, pending payouts, and performance trends — all in one view.</p>
+      </div>
+
+      <div class="adv-card">
+        <div class="adv-icon">🔔</div>
+        <div class="adv-name">Notification System</div>
+        <p class="adv-desc">Push alerts for new offers, chat messages, job status changes, and payment confirmations. Never miss a thing.</p>
+      </div>
+
+      <div class="adv-card">
+        <div class="adv-icon">📍</div>
+        <div class="adv-name">Live Location Sharing</div>
+        <p class="adv-desc">Workers and students share real-time location during active jobs for smooth, accurate physical meetups.</p>
+      </div>
+
+      <div class="adv-card">
+        <div class="adv-icon">🎯</div>
+        <div class="adv-name">Job Tracking Flow</div>
+        <p class="adv-desc">Every job moves through a clear, enforced pipeline:</p>
+        <div class="adv-flow">
+          <span class="status-badge s-open">Open</span>
+          <span class="s-arrow">→</span>
+          <span class="status-badge s-prog">In Progress</span>
+          <span class="s-arrow">→</span>
+          <span class="status-badge s-done">Completed</span>
+        </div>
+      </div>
+
+      <div class="adv-card">
+        <div class="adv-icon">💳</div>
+        <div class="adv-name">Subscription Tiers</div>
+        <p class="adv-desc">Free tier available for all. Pro workers get priority placement, more active bids, and analytics.</p>
+      </div>
+
+      <div class="adv-card">
+        <div class="adv-icon">💬</div>
+        <div class="adv-name">Auto Chat Creation</div>
+        <p class="adv-desc">Accept offer → private chat auto-created → both users redirected immediately. Zero friction, zero confusion.</p>
+      </div>
+
+      <div class="adv-card">
+        <div class="adv-icon">🚫</div>
+        <div class="adv-name">Report & Block</div>
+        <p class="adv-desc">Any user can report or block another. Flagged accounts reviewed with zero tolerance for scams or fraud.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     SYSTEM FLOW (Backend Visual)
+     ============================================================ -->
+<section class="section flow" id="flow">
+  <div class="container">
+    <div class="text-center reveal">
+      <div class="section-tag tag-gray">🔁 Backend Flow</div>
+      <h2 class="section-title">How the System Controls Every Job</h2>
+      <p class="section-sub">
+        PlugMe isn't just a UI. Every job moves through a controlled backend
+        pipeline that enforces correct order, prevents skipping, and auto-triggers
+        key actions.
+      </p>
+    </div>
+
+    <div class="flow-steps">
+
+      <div class="flow-step">
+        <div class="fs-circle fs-1">📝</div>
+        <div class="fs-title">Job Created</div>
+        <p class="fs-desc">Student posts request. Backend stores it, AI optimizes it, makes it visible to nearby workers.</p>
+      </div>
+
+      <div class="flow-step">
+        <div class="fs-circle fs-2">💰</div>
+        <div class="fs-title">Offer Submitted</div>
+        <p class="fs-desc">Workers submit bids with price + message. Backend links each offer to the job and notifies the student.</p>
+      </div>
+
+      <div class="flow-step">
+        <div class="fs-circle fs-3">✅</div>
+        <div class="fs-critical">Critical Point</div>
+        <div class="fs-title">Offer Accepted</div>
+        <p class="fs-desc">Student accepts. Backend marks offer as accepted, assigns worker, updates status to In Progress, and auto-creates chat.</p>
+      </div>
+
+      <div class="flow-step">
+        <div class="fs-circle fs-4">💬</div>
+        <div class="fs-title">Chat & Work</div>
+        <p class="fs-desc">Both users coordinate through auto-created chat. Real-time location sharing enabled for meetups.</p>
+      </div>
+
+      <div class="flow-step">
+        <div class="fs-circle fs-5">⭐</div>
+        <div class="fs-title">Completed & Rated</div>
+        <p class="fs-desc">Job marked done. Payment released. Student rates worker. Campus Cred score updated.</p>
+      </div>
+
+    </div>
+
+    <!-- Critical note -->
+    <div class="reveal" style="margin-top:40px;">
+      <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:16px;padding:24px 28px;display:flex;align-items:flex-start;gap:16px;max-width:700px;margin:0 auto;">
+        <span style="font-size:28px;flex-shrink:0;">🚨</span>
+        <div>
+          <div style="font-family:var(--font-d);font-size:16px;font-weight:700;color:#dc2626;margin-bottom:6px;">Critical Backend Requirement</div>
+          <p style="font-size:14px;color:#7f1d1d;line-height:1.65;">
+            When a student accepts an offer, the system <strong>must automatically</strong> create a chat room
+            and redirect both users to it. If this doesn't happen, the app is UI-only — not a working system.
+            This single action is the core of what makes PlugMe functional.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============================================================
+     TRUST
+     ============================================================ -->
+<section class="section trust" id="trust">
+  <div class="container">
+    <div class="text-center reveal">
+      <div class="section-tag tag-blue">🛡️ Safety</div>
+      <h2 class="section-title">Built for NSUK. Built to Be Trusted.</h2>
+      <p class="section-sub">
+        Every layer of PlugMe is designed to keep students and workers safe,
+        honest, and accountable.
+      </p>
+    </div>
+
+    <div class="trust-grid">
+      <div class="trust-card reveal">
+        <div class="trust-icon">🏫</div>
+        <div class="trust-title">Campus-Only Users</div>
+        <p class="trust-desc">All accounts are verified NSUK students and registered campus workers. No outsiders, no randos.</p>
+      </div>
+      <div class="trust-card reveal">
+        <div class="trust-icon">🔐</div>
+        <div class="trust-title">Secure Communication</div>
+        <p class="trust-desc">All chats are private. Personal contact info stays hidden until deliberately unlocked by the student.</p>
+      </div>
+      <div class="trust-card reveal">
+        <div class="trust-icon">⭐</div>
+        <div class="trust-title">Transparent Ratings</div>
+        <p class="trust-desc">Every worker's rating is built from real completed jobs — no fake reviews, no pay-to-rank.</p>
+      </div>
+      <div class="trust-card reveal">
+        <div class="trust-icon">🚨</div>
+        <div class="trust-title">Report & Block</div>
+        <p class="trust-desc">Any bad actor can be reported and blocked. Zero tolerance for scams, fraud, or harassment.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     CTA
+     ============================================================ -->
+<section class="cta" id="cta">
+  <div class="container">
+    <div class="cta-inner reveal">
+      <h2 class="cta-title">Start Using PlugMe Today</h2>
+      <p class="cta-sub">
+        Post your first job in under 60 seconds. Or browse open jobs near you
+        right now and start earning on campus.
+      </p>
+      <div class="cta-btns">
+        <a href="#" href="register.html" class="btn-cta-blue">🔵 Get Help Now</a>
+        <a href="#" href="register.html?role=worker" class="btn-cta-green">🟢 Start Earning</a>
+      </div>
+      <p class="cta-note">Free to join · No setup fees · NSUK students &amp; workers only</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+
+      <div class="footer-brand">
+        <div class="nav-logo">
+          <div class="logo-mark">P</div>
+          <span class="logo-text">Plug<span>Me</span></span>
+        </div>
+        <p class="footer-desc">
+          The campus marketplace connecting NSUK students with trusted campus
+          workers. Get things done. Get paid.
+        </p>
+        <div class="footer-unlock-badge">🔓 Contact Unlock · ₦99</div>
+      </div>
+
+      <div>
+        <div class="footer-col-title">Platform</div>
+        <ul class="footer-links">
+          <li><a href="#how">How It Works</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#unlock">Contact Unlock</a></li>
+          <li><a href="#flow">System Flow</a></li>
+          <li><a href="#advanced">Advanced</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="footer-col-title">Services</div>
+        <ul class="footer-links">
+          <li><a href="#">Laundry &amp; Errands</a></li>
+          <li><a href="#">Tech &amp; Repairs</a></li>
+          <li><a href="#">Food Delivery</a></li>
+          <li><a href="#">Hair &amp; Beauty</a></li>
+          <li><a href="#">Printing &amp; Typing</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="footer-col-title">Company</div>
+        <ul class="footer-links">
+          <li><a href="#">About PlugMe</a></li>
+          <li><a href="#">Trust &amp; Safety</a></li>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Use</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <hr class="footer-hr" />
+
+    <div class="footer-bottom">
+      <span>© 2025 NSUK PlugMe. All rights reserved.</span>
+      <span>Made with <span class="footer-heart">♥</span> at Nasarawa State University, Keffi</span>
+    </div>
+  </div>
+</footer>
+
+<!-- Scroll to top -->
+<button id="scrollTop" aria-label="Scroll to top" style="
+  position:fixed; bottom:24px; right:24px; z-index:500;
+  width:44px; height:44px; border-radius:50%;
+  background:var(--student); color:#fff;
+  display:flex; align-items:center; justify-content:center;
+  font-size:18px; box-shadow:0 4px 16px rgba(37,99,235,.4);
+  opacity:0; pointer-events:none;
+  transition:opacity .3s, transform .3s;
+  border:none; cursor:pointer;
+">↑</button>
+
+<script src="js/api.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

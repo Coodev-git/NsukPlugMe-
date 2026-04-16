@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard — NSUK PlugMe</title>
+  <link rel="stylesheet" href="css/app.css"/>
+</head>
+<body>
+
+<!-- Loading overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <div class="loading-text" id="loadingText">Loading...</div>
+</div>
+
+<!-- Toast container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Sidebar overlay (mobile) -->
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:99;" onclick="closeSidebar()"></div>
+
+<div class="app-layout">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand">
+        <div class="sidebar-logo">P</div>
+        <span class="sidebar-name">PlugMe</span>
+      </div>
+    </div>
+
+    <div class="sidebar-user">
+      <div class="sidebar-avatar" id="sidebarAvatar">?</div>
+      <div>
+        <div class="sidebar-user-name"  id="sidebarName">Loading…</div>
+        <div class="sidebar-user-role" id="sidebarRole">—</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav" id="sidebarNav">
+      <!-- Filled by JS based on role -->
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="nav-link" style="color:#f87171;" onclick="handleLogout()">
+        <span class="nav-icon">🚪</span> Log Out
+      </button>
+    </div>
+  </aside>
+
+  <!-- ── MAIN CONTENT ── -->
+  <div class="main-content">
+
+    <!-- Top bar -->
+    <div class="app-topbar">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button class="sidebar-toggle" onclick="openSidebar()">☰</button>
+        <span class="topbar-title" id="pageTitle">Dashboard</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="topbar-notif-btn" id="notifBtn" onclick="showPage('notifications')" title="Notifications">
+          🔔
+          <div class="notif-dot" id="notifDot" style="display:none;"></div>
+        </button>
+        <button class="btn btn-blue btn-sm" id="topbarCTA" onclick="showPage('post-job')">+ Post Job</button>
+      </div>
+    </div>
+
+    <div class="app-body">
+
+      <!-- ════════ DASHBOARD PAGE ════════ -->
+      <div class="page active" id="page-dashboard">
+        <div class="stats-row" id="statsRow">
+          <div class="stat-card">
+            <div class="stat-card-icon">📋</div>
+            <div class="stat-card-num"  id="statJobs">—</div>
+            <div class="stat-card-label" id="statJobsLabel">Active Jobs</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-icon">💬</div>
+            <div class="stat-card-num"  id="statChats">—</div>
+            <div class="stat-card-label">Active Chats</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-icon">⭐</div>
+            <div class="stat-card-num"  id="statRating">—</div>
+            <div class="stat-card-label">Rating</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-icon">🏆</div>
+            <div class="stat-card-num"  id="statCred">—</div>
+            <div class="stat-card-label">Campus Cred</div>
+          </div>
+        </div>
+
+        <!-- Worker earnings card (worker only) -->
+        <div class="card" id="earningsCard" style="display:none;margin-bottom:24px;">
+          <div class="card-title">💰 Earnings Overview</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+            <div>
+              <div style="font-size:13px;color:var(--text-muted);">Total Earned</div>
+              <div style="font-family:var(--font-d);font-size:28px;font-weight:800;color:var(--worker);">₦<span id="totalEarned">0</span></div>
+            </div>
+            <div>
+              <div style="font-size:13px;color:var(--text-muted);">Jobs Completed</div>
+              <div style="font-family:var(--font-d);font-size:28px;font-weight:800;color:var(--text);" id="completedJobs">0</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+            <div class="card-title" style="margin-bottom:0;" id="recentTitle">Recent Jobs</div>
+            <button class="btn btn-ghost btn-sm" onclick="showPage('jobs')">View all →</button>
+          </div>
+          <div id="dashboardJobs"><div class="spinner"></div></div>
+        </div>
+      </div>
+
+      <!-- ════════ BROWSE JOBS ════════ -->
+      <div class="page" id="page-jobs">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px;">
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <input class="form-input" style="width:220px;" id="jobSearch" placeholder="🔍 Search jobs..." oninput="debounceLoadJobs()"/>
+            <select class="form-input" style="width:150px;" id="jobCategoryFilter" onchange="loadJobs()">
+              <option value="">All categories</option>
+              <option value="laundry">🧺 Laundry</option>
+              <option value="delivery">🛵 Delivery</option>
+              <option value="tech">💻 Tech</option>
+              <option value="food">🍱 Food</option>
+              <option value="hair_beauty">✂️ Hair & Beauty</option>
+              <option value="printing">🖨️ Printing</option>
+              <option value="tutoring">📚 Tutoring</option>
+              <option value="other">📦 Other</option>
+            </select>
+          </div>
+          <button class="btn btn-blue btn-sm" id="workerBrowseBtn" onclick="showPage('post-job')" style="display:none;">+ Post Job</button>
+        </div>
+        <div class="jobs-grid" id="jobsGrid"><div class="spinner"></div></div>
+        <div style="text-align:center;margin-top:20px;">
+          <button class="btn btn-outline btn-sm" id="loadMoreJobs" onclick="loadMoreJobs()" style="display:none;">Load more</button>
+        </div>
+      </div>
+
+      <!-- ════════ POST JOB (student only) ════════ -->
+      <div class="page" id="page-post-job">
+        <div class="post-job-form">
+          <div class="card">
+            <div class="card-title">📋 Post a New Job</div>
+
+            <div class="alert alert-info show" style="margin-bottom:18px;">
+              <span>🤖</span>
+              <span>AI will automatically improve your description so workers understand you clearly.</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Job Title</label>
+              <input class="form-input" id="jobTitle" placeholder="e.g. Wash 5 shirts and iron them"/>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Category</label>
+              <div class="category-grid" id="categoryGrid">
+                <div class="cat-btn" data-cat="laundry"     onclick="selectCat(this)"><div class="cat-btn-icon">🧺</div><div class="cat-btn-name">Laundry</div></div>
+                <div class="cat-btn" data-cat="delivery"    onclick="selectCat(this)"><div class="cat-btn-icon">🛵</div><div class="cat-btn-name">Delivery</div></div>
+                <div class="cat-btn" data-cat="tech"        onclick="selectCat(this)"><div class="cat-btn-icon">💻</div><div class="cat-btn-name">Tech</div></div>
+                <div class="cat-btn" data-cat="food"        onclick="selectCat(this)"><div class="cat-btn-icon">🍱</div><div class="cat-btn-name">Food</div></div>
+                <div class="cat-btn" data-cat="hair_beauty" onclick="selectCat(this)"><div class="cat-btn-icon">✂️</div><div class="cat-btn-name">Hair/Beauty</div></div>
+                <div class="cat-btn" data-cat="printing"    onclick="selectCat(this)"><div class="cat-btn-icon">🖨️</div><div class="cat-btn-name">Printing</div></div>
+                <div class="cat-btn" data-cat="tutoring"    onclick="selectCat(this)"><div class="cat-btn-icon">📚</div><div class="cat-btn-name">Tutoring</div></div>
+                <div class="cat-btn" data-cat="other"       onclick="selectCat(this)"><div class="cat-btn-icon">📦</div><div class="cat-btn-name">Other</div></div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Description</label>
+              <textarea class="form-input" id="jobDesc" rows="4" placeholder="Describe exactly what you need done, where you are, and any important details…"></textarea>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+              <div class="form-group">
+                <label class="form-label">Budget Min (₦)</label>
+                <input class="form-input" type="number" id="budgetMin" placeholder="e.g. 300"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Budget Max (₦)</label>
+                <input class="form-input" type="number" id="budgetMax" placeholder="e.g. 600"/>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Location / Address on Campus</label>
+              <input class="form-input" id="jobLocation" placeholder="e.g. Faculty of Science, Block A"/>
+            </div>
+
+            <div class="alert alert-error" id="postJobError" style="margin-top:8px;">
+              <span>⚠️</span><span id="postJobErrorMsg"></span>
+            </div>
+
+            <div style="display:flex;gap:10px;margin-top:8px;">
+              <button class="btn btn-blue btn-lg" id="postJobBtn" onclick="handlePostJob()">🚀 Post Job</button>
+              <button class="btn btn-outline" onclick="showPage('jobs')">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════ MY JOBS (student) ════════ -->
+      <div class="page" id="page-my-jobs">
+        <div style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;">
+          <button class="btn btn-sm btn-blue"    onclick="loadMyJobs('open')">Open</button>
+          <button class="btn btn-sm btn-outline"  onclick="loadMyJobs('in_progress')">In Progress</button>
+          <button class="btn btn-sm btn-outline"  onclick="loadMyJobs('completed')">Completed</button>
+          <button class="btn btn-sm btn-outline"  onclick="loadMyJobs()">All</button>
+        </div>
+        <div class="jobs-grid" id="myJobsGrid"><div class="spinner"></div></div>
+      </div>
+
+      <!-- ════════ MY OFFERS (worker) ════════ -->
+      <div class="page" id="page-my-offers">
+        <div style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;">
+          <button class="btn btn-sm btn-blue"   onclick="loadMyOffers('pending')">Pending</button>
+          <button class="btn btn-sm btn-outline" onclick="loadMyOffers('accepted')">Accepted</button>
+          <button class="btn btn-sm btn-outline" onclick="loadMyOffers()">All</button>
+        </div>
+        <div id="myOffersContainer"><div class="spinner"></div></div>
+      </div>
+
+      <!-- ════════ CHATS ════════ -->
+      <div class="page" id="page-chats">
+        <div class="chat-layout card" style="padding:0;overflow:hidden;">
+          <div class="chat-list">
+            <div class="chat-list-header">💬 My Chats</div>
+            <div id="chatListItems"><div class="spinner" style="margin:20px auto;"></div></div>
+          </div>
+          <div class="chat-window" id="chatWindow">
+            <div class="chat-empty">
+              <div class="chat-empty-icon">💬</div>
+              <div class="chat-empty-text">Select a chat to start messaging</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════ WORKERS ════════ -->
+      <div class="page" id="page-workers">
+        <div style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;">
+          <input class="form-input" style="width:220px;" id="workerSearch" placeholder="🔍 Search workers…" oninput="debounceLoadWorkers()"/>
+          <select class="form-input" style="width:160px;" id="workerSkillFilter" onchange="loadWorkers()">
+            <option value="">All skills</option>
+            <option value="tech">Tech & Repairs</option>
+            <option value="delivery">Delivery</option>
+            <option value="laundry">Laundry</option>
+            <option value="food">Food</option>
+            <option value="hair_beauty">Hair & Beauty</option>
+            <option value="printing">Printing</option>
+            <option value="tutoring">Tutoring</option>
+          </select>
+        </div>
+        <div class="workers-grid" id="workersGrid"><div class="spinner"></div></div>
+      </div>
+
+      <!-- ════════ NOTIFICATIONS ════════ -->
+      <div class="page" id="page-notifications">
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+            <div class="card-title" style="margin-bottom:0;">🔔 Notifications</div>
+            <button class="btn btn-ghost btn-sm" onclick="markAllRead()">Mark all read</button>
+          </div>
+          <div id="notifList"><div class="spinner"></div></div>
+        </div>
+      </div>
+
+      <!-- ════════ PROFILE ════════ -->
+      <div class="page" id="page-profile">
+        <div class="card" style="max-width:560px;">
+          <div class="card-title">👤 My Profile</div>
+          <div style="text-align:center;margin-bottom:24px;">
+            <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--student),var(--worker));display:flex;align-items:center;justify-content:center;font-size:30px;color:#fff;font-weight:800;font-family:var(--font-d);margin:0 auto 10px;" id="profileAvatar">?</div>
+            <div style="font-family:var(--font-d);font-size:18px;font-weight:700;" id="profileName">—</div>
+            <div style="font-size:13px;color:var(--text-muted);margin-top:3px;" id="profileRole">—</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Display Name</label>
+            <input class="form-input" id="profileNameInput"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Bio</label>
+            <textarea class="form-input" id="profileBio" rows="3" placeholder="Tell others about yourself…"></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone Number</label>
+            <input class="form-input" id="profilePhone" type="tel" placeholder="08012345678"/>
+            <div class="form-hint">This is the number students can unlock via the ₦99 feature</div>
+          </div>
+          <button class="btn btn-blue" id="saveProfileBtn" onclick="saveProfile()">Save Changes</button>
+        </div>
+      </div>
+
+    </div><!-- /app-body -->
+  </div><!-- /main-content -->
+</div><!-- /app-layout -->
+
+<!-- ── JOB DETAIL MODAL ── -->
+<div class="modal-overlay" id="jobModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="jobModalTitle">Job Details</div>
+      <button class="modal-close" onclick="closeModal('jobModal')">✕</button>
+    </div>
+    <div class="modal-body" id="jobModalBody"></div>
+  </div>
+</div>
+
+<!-- ── OFFER MODAL (worker submits bid) ── -->
+<div class="modal-overlay" id="offerModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Place Your Offer</div>
+      <button class="modal-close" onclick="closeModal('offerModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Your Price (₦)</label>
+        <input class="form-input" type="number" id="offerPrice" placeholder="e.g. 500"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Message to Student</label>
+        <textarea class="form-input" id="offerMessage" rows="3" placeholder="Introduce yourself and why you're the best pick…"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Estimated Time</label>
+        <input class="form-input" id="offerEta" placeholder="e.g. 30 minutes, 1 hour"/>
+      </div>
+      <div class="alert alert-error" id="offerError"><span>⚠️</span><span id="offerErrorMsg"></span></div>
+      <button class="btn btn-green btn-full" id="submitOfferBtn" onclick="submitOffer()">Submit Offer</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── OFFERS LIST MODAL (student views bids) ── -->
+<div class="modal-overlay" id="offersListModal">
+  <div class="modal" style="max-width:600px;">
+    <div class="modal-header">
+      <div class="modal-title">Offers for This Job</div>
+      <button class="modal-close" onclick="closeModal('offersListModal')">✕</button>
+    </div>
+    <div class="modal-body" id="offersListBody"><div class="spinner"></div></div>
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script>
+/* ============================================================
+   NSUK PlugMe — App Dashboard Script
+   ============================================================ */
+
+const { Auth, authAPI, jobsAPI, offersAPI, chatsAPI, usersAPI, reviewsAPI, initSocket, onNotification, onOfferAccepted, onNewMessage } = window.PlugMe;
+
+// ── Guard: redirect to login if not authenticated ─────────────
+if (!Auth.isLoggedIn()) window.location.href = 'login.html';
+
+const user = Auth.getUser();
+let currentPage    = 'dashboard';
+let currentJobId   = null;   // job being viewed
+let currentChatId  = null;   // open chat
+let jobsPage       = 1;
+let socket         = null;
+let typingTimeout  = null;
+
+const CAT_ICONS = { laundry:'🧺', delivery:'🛵', tech:'💻', food:'🍱', hair_beauty:'✂️', printing:'🖨️', tutoring:'📚', other:'📦' };
+const CAT_COLORS= { laundry:'cat-laundry', delivery:'cat-delivery', tech:'cat-tech', food:'cat-food', hair_beauty:'cat-hair_beauty', printing:'cat-printing', tutoring:'cat-tutoring', other:'cat-other' };
+
+/* ────────── INIT ──────────────────────────────────────────── */
+window.addEventListener('DOMContentLoaded', async () => {
+  renderSidebar();
+  await loadDashboard();
+  initSocketEvents();
+});
+
+/* ────────── SIDEBAR ───────────────────────────────────────── */
+function renderSidebar() {
+  document.getElementById('sidebarName').textContent = user.name || 'User';
+  document.getElementById('sidebarAvatar').textContent = (user.name || 'U')[0].toUpperCase();
+  const roleEl = document.getElementById('sidebarRole');
+  roleEl.textContent = user.role === 'worker' ? '💼 Worker' : '🎓 Student';
+  roleEl.className   = `sidebar-user-role ${user.role}`;
+
+  const topbarCTA = document.getElementById('topbarCTA');
+
+  const studentNav = `
+    <div class="sidebar-section-label">Main</div>
+    <button class="nav-link active" onclick="showPage('dashboard')" data-page="dashboard"><span class="nav-icon">🏠</span> Dashboard</button>
+    <button class="nav-link" onclick="showPage('jobs')" data-page="jobs"><span class="nav-icon">🔍</span> Browse Jobs</button>
+    <button class="nav-link" onclick="showPage('post-job')" data-page="post-job"><span class="nav-icon">➕</span> Post a Job</button>
+    <button class="nav-link" onclick="showPage('my-jobs')" data-page="my-jobs"><span class="nav-icon">📋</span> My Jobs</button>
+    <div class="sidebar-section-label">Connect</div>
+    <button class="nav-link" onclick="showPage('chats')" data-page="chats"><span class="nav-icon">💬</span> Chats <span class="nav-badge" id="chatBadge" style="display:none;">0</span></button>
+    <button class="nav-link" onclick="showPage('workers')" data-page="workers"><span class="nav-icon">👥</span> Find Workers</button>
+    <div class="sidebar-section-label">Account</div>
+    <button class="nav-link" onclick="showPage('profile')" data-page="profile"><span class="nav-icon">👤</span> Profile</button>
+  `;
+
+  const workerNav = `
+    <div class="sidebar-section-label">Main</div>
+    <button class="nav-link active" onclick="showPage('dashboard')" data-page="dashboard"><span class="nav-icon">🏠</span> Dashboard</button>
+    <button class="nav-link" onclick="showPage('jobs')" data-page="jobs"><span class="nav-icon">🔍</span> Browse Jobs</button>
+    <button class="nav-link" onclick="showPage('my-offers')" data-page="my-offers"><span class="nav-icon">💰</span> My Offers</button>
+    <div class="sidebar-section-label">Connect</div>
+    <button class="nav-link" onclick="showPage('chats')" data-page="chats"><span class="nav-icon">💬</span> Chats <span class="nav-badge" id="chatBadge" style="display:none;">0</span></button>
+    <div class="sidebar-section-label">Account</div>
+    <button class="nav-link" onclick="showPage('profile')" data-page="profile"><span class="nav-icon">👤</span> Profile</button>
+  `;
+
+  document.getElementById('sidebarNav').innerHTML = user.role === 'worker' ? workerNav : studentNav;
+
+  if (user.role === 'worker') {
+    topbarCTA.textContent = '🔍 Browse Jobs';
+    topbarCTA.onclick = () => showPage('jobs');
+    document.getElementById('earningsCard').style.display = 'block';
+  }
+}
+
+/* ────────── PAGE NAVIGATION ───────────────────────────────── */
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const el = document.getElementById(`page-${page}`);
+  if (el) el.classList.add('active');
+
+  document.querySelectorAll('.nav-link').forEach(l => {
+    l.classList.toggle('active', l.dataset.page === page);
+  });
+
+  const titles = {
+    'dashboard': 'Dashboard', 'jobs': 'Browse Jobs', 'post-job': 'Post a Job',
+    'my-jobs': 'My Jobs', 'my-offers': 'My Offers', 'chats': 'Messages',
+    'workers': 'Find Workers', 'notifications': 'Notifications', 'profile': 'Profile',
+  };
+  document.getElementById('pageTitle').textContent = titles[page] || 'PlugMe';
+  currentPage = page;
+  closeSidebar();
+
+  if (page === 'jobs')          loadJobs();
+  if (page === 'my-jobs')       loadMyJobs('open');
+  if (page === 'my-offers')     loadMyOffers('pending');
+  if (page === 'chats')         loadChats();
+  if (page === 'workers')       loadWorkers();
+  if (page === 'notifications') loadNotifications();
+  if (page === 'profile')       loadProfile();
+}
+
+/* ────────── DASHBOARD ─────────────────────────────────────── */
+async function loadDashboard() {
+  try {
+    document.getElementById('statRating').textContent = user.rating?.toFixed(1) || '—';
+    document.getElementById('statCred').textContent   = user.campusCred || 0;
+
+    if (user.role === 'worker') {
+      const dash = await usersAPI.dashboard();
+      const s    = dash.data.stats;
+      document.getElementById('statJobs').textContent    = s.activeJobs;
+      document.getElementById('statJobsLabel').textContent = 'Active Jobs';
+      document.getElementById('statChats').textContent   = s.pendingOffers;
+      document.getElementById('statRating').textContent  = s.rating?.toFixed(1) || '—';
+      document.getElementById('statCred').textContent    = s.campusCred;
+      document.getElementById('totalEarned').textContent = s.totalEarned.toLocaleString();
+      document.getElementById('completedJobs').textContent = s.completedJobs;
+      document.getElementById('recentTitle').textContent = 'Recent Assigned Jobs';
+      renderJobCards(dash.data.recentJobs, 'dashboardJobs', true);
+    } else {
+      const [myJobs, myChats] = await Promise.all([
+        jobsAPI.myJobs({ limit: 5 }),
+        chatsAPI.list(),
+      ]);
+      document.getElementById('statJobs').textContent    = myJobs.meta.total;
+      document.getElementById('statJobsLabel').textContent = 'My Jobs';
+      document.getElementById('statChats').textContent   = myChats.data.count;
+      document.getElementById('recentTitle').textContent = 'My Recent Jobs';
+      renderJobCards(myJobs.data, 'dashboardJobs', true);
+    }
+  } catch (e) {
+    document.getElementById('dashboardJobs').innerHTML =
+      `<div class="empty-state"><div class="empty-state-icon">⚠️</div><div class="empty-state-title">Couldn't load data</div><div class="empty-state-desc">${e.message}</div></div>`;
+  }
+}
+
+/* ────────── JOBS ──────────────────────────────────────────── */
+async function loadJobs(reset = true) {
+  if (reset) jobsPage = 1;
+  const grid = document.getElementById('jobsGrid');
+  if (reset) grid.innerHTML = '<div class="spinner"></div>';
+
+  try {
+    const params = { page: jobsPage, limit: 10, status: 'open' };
+    const search = document.getElementById('jobSearch')?.value.trim();
+    const cat    = document.getElementById('jobCategoryFilter')?.value;
+    if (search) params.search = search;
+    if (cat)    params.category = cat;
+
+    const res   = await jobsAPI.list(params);
+    const jobs  = res.data;
+    const more  = jobsPage * 10 < res.meta.total;
+
+    if (reset) grid.innerHTML = '';
+    if (!jobs.length && reset) {
+      grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><div class="empty-state-icon">🔍</div><div class="empty-state-title">No jobs found</div><div class="empty-state-desc">Try different filters or check back later.</div></div>`;
+    } else {
+      jobs.forEach(job => {
+        grid.insertAdjacentHTML('beforeend', jobCardHTML(job));
+      });
+    }
+    document.getElementById('loadMoreJobs').style.display = more ? 'inline-flex' : 'none';
+  } catch (e) {
+    grid.innerHTML = `<p style="color:var(--danger);">Error: ${e.message}</p>`;
+  }
+}
+
+function loadMoreJobs() {
+  jobsPage++;
+  loadJobs(false);
+}
+
+let jobSearchTimeout;
+function debounceLoadJobs() {
+  clearTimeout(jobSearchTimeout);
+  jobSearchTimeout = setTimeout(loadJobs, 400);
+}
+
+function jobCardHTML(job, compact = false) {
+  const icon   = CAT_ICONS[job.category] || '📦';
+  const color  = CAT_COLORS[job.category] || 'cat-other';
+  const budget = job.budget?.max ? `<span>₦${job.budget.max.toLocaleString()}</span>` : '';
+  const offers = job.offerCount ? `<span class="job-meta-chip">💬 ${job.offerCount} offer${job.offerCount!==1?'s':''}</span>` : '';
+  const time   = timeAgo(job.createdAt);
+
+  const workerBtn = user.role === 'worker' && job.status === 'open'
+    ? `<button class="btn btn-green btn-sm" onclick="event.stopPropagation();openOfferModal('${job._id}')">Place Offer</button>`
+    : '';
+
+  return `
+    <div class="job-card" onclick="openJobModal('${job._id}')">
+      <div class="job-card-top">
+        <div class="job-cat-icon ${color}">${icon}</div>
+        <div>
+          <div class="job-card-title">${esc(job.title)}</div>
+          <div class="job-card-desc">${esc(job.description)}</div>
+        </div>
+      </div>
+      <div class="job-card-footer">
+        <span class="job-status-badge status-${job.status}">${job.status.replace('_',' ')}</span>
+        ${budget ? `<span class="job-price">${budget}</span>` : ''}
+        ${offers}
+        <span class="job-meta-chip">🕐 ${time}</span>
+      </div>
+      ${workerBtn ? `<div class="job-card-actions">${workerBtn}</div>` : ''}
+    </div>`;
+}
+
+/* ────────── JOB MODAL ─────────────────────────────────────── */
+async function openJobModal(jobId) {
+  currentJobId = jobId;
+  openModal('jobModal');
+  document.getElementById('jobModalBody').innerHTML = '<div class="spinner"></div>';
+
+  try {
+    const res = await jobsAPI.get(jobId);
+    const job = res.data.job;
+    const icon = CAT_ICONS[job.category] || '📦';
+
+    const isMyJob    = user.role === 'student' && job.student?._id === user._id;
+    const canOffer   = user.role === 'worker' && job.status === 'open';
+    const canComplete = isMyJob && job.status === 'in_progress';
+    const canViewOffers = isMyJob && job.status === 'open' && job.offerCount > 0;
+
+    document.getElementById('jobModalTitle').textContent = job.title;
+    document.getElementById('jobModalBody').innerHTML = `
+      <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
+        <span class="job-status-badge status-${job.status}">${job.status.replace('_',' ')}</span>
+        <span class="job-meta-chip">${icon} ${job.category.replace('_',' ')}</span>
+        ${job.budget?.max ? `<span class="job-meta-chip">💰 Up to ₦${job.budget.max.toLocaleString()}</span>` : ''}
+      </div>
+      <p style="font-size:14px;color:var(--text-muted);line-height:1.7;margin-bottom:14px;">${esc(job.description)}</p>
+      ${job.location?.address ? `<p style="font-size:13px;color:var(--text-muted);">📍 ${esc(job.location.address)}</p><br>` : ''}
+      ${job.student ? `<div style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--bg);border-radius:10px;margin-bottom:16px;">
+        <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--student),var(--worker));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;">${(job.student.name||'?')[0]}</div>
+        <div><div style="font-weight:600;font-size:14px;">${esc(job.student.name)}</div><div style="font-size:12px;color:var(--text-muted);">Posted by · ⭐ ${job.student.rating?.toFixed(1)||'New'}</div></div>
+      </div>` : ''}
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        ${canOffer    ? `<button class="btn btn-green" onclick="closeModal('jobModal');openOfferModal('${job._id}')">💰 Place Offer</button>` : ''}
+        ${canViewOffers ? `<button class="btn btn-blue" onclick="closeModal('jobModal');openOffersListModal('${job._id}')">View ${job.offerCount} Offer${job.offerCount!==1?'s':''}</button>` : ''}
+        ${canComplete ? `<button class="btn btn-green" onclick="completeJob('${job._id}')">✅ Mark Complete</button>` : ''}
+        ${isMyJob && job.status === 'open' ? `<button class="btn btn-danger btn-sm" onclick="deleteJob('${job._id}')">🗑 Delete</button>` : ''}
+      </div>
+    `;
+  } catch (e) {
+    document.getElementById('jobModalBody').innerHTML = `<p style="color:var(--danger);">${e.message}</p>`;
+  }
+}
+
+/* ────────── POST JOB ──────────────────────────────────────── */
+let selectedCategory = '';
+function selectCat(el) {
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedCategory = el.dataset.cat;
+}
+
+async function handlePostJob() {
+  const title   = document.getElementById('jobTitle').value.trim();
+  const desc    = document.getElementById('jobDesc').value.trim();
+  const bMin    = document.getElementById('budgetMin').value;
+  const bMax    = document.getElementById('budgetMax').value;
+  const locAddr = document.getElementById('jobLocation').value.trim();
+  const errBox  = document.getElementById('postJobError');
+  const errMsg  = document.getElementById('postJobErrorMsg');
+  const btn     = document.getElementById('postJobBtn');
+
+  errBox.classList.remove('show');
+  if (!title || !desc || !selectedCategory) {
+    errMsg.textContent = 'Title, description, and category are required.';
+    errBox.classList.add('show'); return;
+  }
+
+  btn.disabled    = true;
+  btn.textContent = '⏳ Posting (AI optimizing)…';
+
+  try {
+    const body = {
+      title, description: desc, category: selectedCategory,
+      budget:   { min: Number(bMin)||0, max: Number(bMax)||0 },
+      location: { address: locAddr },
+    };
+    await jobsAPI.create(body);
+    toast('✅ Job posted successfully!', 'success');
+    // Reset form
+    document.getElementById('jobTitle').value = '';
+    document.getElementById('jobDesc').value  = '';
+    document.getElementById('budgetMin').value = '';
+    document.getElementById('budgetMax').value = '';
+    document.getElementById('jobLocation').value = '';
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('selected'));
+    selectedCategory = '';
+    showPage('my-jobs');
+  } catch (e) {
+    errMsg.textContent = e.message || 'Failed to post job.';
+    errBox.classList.add('show');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '🚀 Post Job';
+  }
+}
+
+/* ────────── MY JOBS ───────────────────────────────────────── */
+async function loadMyJobs(status) {
+  const grid = document.getElementById('myJobsGrid');
+  grid.innerHTML = '<div class="spinner"></div>';
+  try {
+    const params = { limit: 20 };
+    if (status) params.status = status;
+    const res = await jobsAPI.myJobs(params);
+    grid.innerHTML = '';
+    if (!res.data.length) {
+      grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><div class="empty-state-icon">📋</div><div class="empty-state-title">No jobs here yet</div><div class="empty-state-desc">Post a job to get started.</div><button class="btn btn-blue btn-sm" onclick="showPage('post-job')">+ Post Job</button></div>`;
+      return;
+    }
+    res.data.forEach(job => grid.insertAdjacentHTML('beforeend', jobCardHTML(job)));
+  } catch(e) { grid.innerHTML = `<p style="color:var(--danger);">${e.message}</p>`; }
+}
+
+/* ────────── OFFERS MODAL (student views bids) ──────────────── */
+async function openOffersListModal(jobId) {
+  currentJobId = jobId;
+  openModal('offersListModal');
+  document.getElementById('offersListBody').innerHTML = '<div class="spinner"></div>';
+
+  try {
+    const res    = await offersAPI.list(jobId);
+    const offers = res.data.offers;
+    if (!offers.length) {
+      document.getElementById('offersListBody').innerHTML = `<div class="empty-state"><div class="empty-state-icon">💸</div><div class="empty-state-title">No offers yet</div></div>`;
+      return;
+    }
+    document.getElementById('offersListBody').innerHTML = offers.map(o => `
+      <div class="offer-card">
+        <div class="offer-top">
+          <div class="offer-avatar">${(o.worker?.name||'?')[0]}</div>
+          <div>
+            <div class="offer-name">${esc(o.worker?.name||'Worker')}</div>
+            <div class="offer-rating">⭐ ${o.worker?.rating?.toFixed(1)||'New'} · ${o.worker?.ratingCount||0} jobs</div>
+          </div>
+          <div class="offer-price">₦${o.price.toLocaleString()}</div>
+        </div>
+        ${o.message ? `<div class="offer-msg">"${esc(o.message)}"</div>` : ''}
+        ${o.eta ? `<div class="offer-eta">⏱ ETA: ${esc(o.eta)}</div>` : ''}
+        <div class="offer-actions">
+          <button class="btn btn-green btn-sm" onclick="acceptOffer('${jobId}','${o._id}')">✅ Accept</button>
+          <button class="btn btn-outline btn-sm" onclick="rejectOffer('${jobId}','${o._id}')">✕ Reject</button>
+        </div>
+      </div>
+    `).join('');
+  } catch(e) {
+    document.getElementById('offersListBody').innerHTML = `<p style="color:var(--danger);">${e.message}</p>`;
+  }
+}
+
+/* ────────── ACCEPT OFFER ──────────────────────────────────── */
+async function acceptOffer(jobId, offerId) {
+  showLoading('Accepting offer & creating chat…');
+  try {
+    const res = await offersAPI.accept(jobId, offerId);
+    hideLoading();
+    closeModal('offersListModal');
+    closeModal('jobModal');
+    toast('✅ Offer accepted! Chat room created. 💬', 'success');
+
+    // Redirect to chat
+    const chatId = res.data.chat._id;
+    setTimeout(() => {
+      showPage('chats');
+      openChat(chatId, res.data.job);
+    }, 600);
+
+  } catch(e) {
+    hideLoading();
+    toast(e.message, 'error');
+  }
+}
+
+async function rejectOffer(jobId, offerId) {
+  try {
+    await offersAPI.reject(jobId, offerId);
+    toast('Offer rejected', 'info');
+    openOffersListModal(jobId);
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+/* ────────── SUBMIT OFFER (worker) ─────────────────────────── */
+function openOfferModal(jobId) {
+  currentJobId = jobId;
+  document.getElementById('offerPrice').value   = '';
+  document.getElementById('offerMessage').value = '';
+  document.getElementById('offerEta').value     = '';
+  document.getElementById('offerError').classList.remove('show');
+  openModal('offerModal');
+}
+
+async function submitOffer() {
+  const price   = document.getElementById('offerPrice').value;
+  const message = document.getElementById('offerMessage').value.trim();
+  const eta     = document.getElementById('offerEta').value.trim();
+  const errBox  = document.getElementById('offerError');
+  const errMsg  = document.getElementById('offerErrorMsg');
+  const btn     = document.getElementById('submitOfferBtn');
+
+  errBox.classList.remove('show');
+  if (!price || Number(price) < 1) {
+    errMsg.textContent = 'Enter a valid price.'; errBox.classList.add('show'); return;
+  }
+  btn.disabled = true; btn.textContent = 'Submitting…';
+  try {
+    await offersAPI.submit(currentJobId, { price: Number(price), message, eta });
+    toast('💰 Offer submitted!', 'success');
+    closeModal('offerModal');
+  } catch(e) {
+    errMsg.textContent = e.message; errBox.classList.add('show');
+  } finally { btn.disabled = false; btn.textContent = 'Submit Offer'; }
+}
+
+/* ────────── MY OFFERS (worker) ─────────────────────────────── */
+async function loadMyOffers(status) {
+  const cont = document.getElementById('myOffersContainer');
+  cont.innerHTML = '<div class="spinner"></div>';
+  try {
+    const params = { limit: 20 };
+    if (status) params.status = status;
+    const res = await offersAPI.myOffers(params);
+    if (!res.data.length) {
+      cont.innerHTML = `<div class="empty-state"><div class="empty-state-icon">💰</div><div class="empty-state-title">No offers yet</div><div class="empty-state-desc">Browse jobs and place your first offer.</div><button class="btn btn-blue btn-sm" onclick="showPage('jobs')">Browse Jobs</button></div>`;
+      return;
+    }
+    cont.innerHTML = res.data.map(o => `
+      <div class="offer-card">
+        <div class="offer-top">
+          <div>
+            <div class="offer-name">${esc(o.job?.title||'Job')}</div>
+            <div class="offer-rating">${(o.job?.category||'').replace('_',' ')} · ${o.job?.status||''}</div>
+          </div>
+          <div class="offer-price">₦${o.price.toLocaleString()}</div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+          <span class="job-status-badge status-${o.status}">${o.status}</span>
+          ${o.chatId ? `<button class="btn btn-blue btn-sm" onclick="showPage('chats')">💬 Open Chat</button>` : ''}
+          ${o.status === 'pending' ? `<button class="btn btn-outline btn-sm" onclick="withdrawOffer('${o._id}')">Withdraw</button>` : ''}
+        </div>
+      </div>
+    `).join('');
+  } catch(e) { cont.innerHTML = `<p style="color:var(--danger);">${e.message}</p>`; }
+}
+
+async function withdrawOffer(offerId) {
+  if (!confirm('Withdraw this offer?')) return;
+  try {
+    await offersAPI.withdraw(offerId);
+    toast('Offer withdrawn', 'info');
+    loadMyOffers();
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+/* ────────── COMPLETE JOB ──────────────────────────────────── */
+async function completeJob(jobId) {
+  if (!confirm('Mark this job as complete?')) return;
+  try {
+    await jobsAPI.complete(jobId);
+    toast('🎉 Job marked complete!', 'success');
+    closeModal('jobModal');
+    loadMyJobs();
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+async function deleteJob(jobId) {
+  if (!confirm('Delete this job?')) return;
+  try {
+    await jobsAPI.delete(jobId);
+    toast('Job removed', 'info');
+    closeModal('jobModal');
+    loadMyJobs();
+  } catch(e) { toast(e.message, 'error'); }
+}
+
+/* ────────── CHATS ──────────────────────────────────────────── */
+async function loadChats() {
+  const list = document.getElementById('chatListItems');
+  list.innerHTML = '<div class="spinner" style="margin:20px auto;"></div>';
+  try {
+    const res   = await chatsAPI.list();
+    const chats = res.data.chats;
+    if (!chats.length) {
+      list.innerHTML = `<div style="padding:24px;text-align:center;color:var(--text-muted);font-size:14px;">No chats yet.<br><br>Accept an offer to start chatting.</div>`;
+      return;
+    }
+    list.innerHTML = chats.map(chat => {
+      const other = chat.otherUser;
+      const init  = (other?.name||'?')[0].toUpperCase();
+      const unread = chat.myUnread > 0 ? `<span class="chat-unread">${chat.myUnread}</span>` : '';
+      const time   = chat.lastMessage?.timestamp ? timeAgo(chat.lastMessage.timestamp) : '';
+      const preview = chat.lastMessage?.text || 'Chat started';
+      return `
+        <div class="chat-list-item" onclick="openChat('${chat._id}', chat)" id="chatItem-${chat._id}">
+          <div class="chat-item-avatar">${init}</div>
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div class="chat-item-name">${esc(other?.name||'User')}</div>
+              <div class="chat-item-time">${time}</div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div class="chat-item-preview">${esc(preview)}</div>
+              ${unread}
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+  } catch(e) { list.innerHTML = `<p style="padding:16px;color:var(--danger);">${e.message}</p>`; }
+}
+
+async function openChat(chatId, jobOrChat = null) {
+  currentChatId = chatId;
+
+  document.querySelectorAll('.chat-list-item').forEach(el => el.classList.remove('active'));
+  const chatItem = document.getElementById(`chatItem-${chatId}`);
+  if (chatItem) chatItem.classList.add('active');
+
+  const win = document.getElementById('chatWindow');
+  win.innerHTML = `
+    <div class="chat-header">
+      <div class="chat-header-avatar">💬</div>
+      <div><div class="chat-header-name">Loading…</div></div>
+    </div>
+    <div class="chat-messages"><div class="spinner"></div></div>
+    <div class="chat-input-bar">
+      <textarea class="chat-input" id="chatInput" placeholder="Type a message…" rows="1" onkeydown="chatKeyDown(event)"></textarea>
+      <button class="chat-send-btn" onclick="sendMessage()">➤</button>
+    </div>`;
+
+  // Join socket room
+  if (socket?.connected) socket.emit('join_chat', { chatId });
+
+  try {
+    const res  = await chatsAPI.getMessages(chatId);
+    const msgs = res.data;
+    const chat = res; // meta has info
+
+    // Try to get other participant name
+    const otherName = jobOrChat?.otherUser?.name || 'User';
+    const jobTitle  = jobOrChat?.job?.title || '';
+
+    win.innerHTML = `
+      <div class="chat-header">
+        <div class="chat-header-avatar">${(otherName)[0].toUpperCase()}</div>
+        <div>
+          <div class="chat-header-name">${esc(otherName)}</div>
+          ${jobTitle ? `<div class="chat-header-status">${esc(jobTitle)}</div>` : ''}
+        </div>
+      </div>
+      <div class="chat-messages" id="chatMessages"></div>
+      <div id="typingIndicator" style="padding:0 20px;height:24px;"></div>
+      <div class="chat-input-bar">
+        <textarea class="chat-input" id="chatInput" placeholder="Type a message…" rows="1" onkeydown="chatKeyDown(event)" oninput="onTyping()"></textarea>
+        <button class="chat-send-btn" onclick="sendMessage()">➤</button>
+      </div>`;
+
+    const msgContainer = document.getElementById('chatMessages');
+    if (!msgs.length) {
+      msgContainer.innerHTML = `<div class="chat-empty"><div class="chat-empty-icon">✅</div><div class="chat-empty-text">Chat ready — say hello!</div></div>`;
+    } else {
+      msgs.forEach(m => msgContainer.insertAdjacentHTML('beforeend', msgHTML(m)));
+    }
+    msgContainer.scrollTop = msgContainer.scrollHeight;
+
+  } catch(e) { win.innerHTML = `<p style="padding:24px;color:var(--danger);">${e.message}</p>`; }
+}
+
+function msgHTML(m) {
+  const isMe  = m.sender?._id === user._id || m.sender === user._id;
+  const isSys = m.isSystem || m.type === 'system';
+  const cls   = isSys ? 'system' : (isMe ? 'mine' : 'theirs');
+  const init  = (m.sender?.name||'?')[0].toUpperCase();
+  const time  = m.createdAt ? new Date(m.createdAt).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) : '';
+  return `
+    <div class="msg ${cls}">
+      ${!isMe && !isSys ? `<div class="msg-avatar">${init}</div>` : ''}
+      <div>
+        <div class="msg-bubble">${esc(m.text||'')}</div>
+        <div class="msg-time">${time}</div>
+      </div>
+    </div>`;
+}
+
+function chatKeyDown(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+function onTyping() {
+  if (socket?.connected && currentChatId) {
+    socket.emit('typing_start', { chatId: currentChatId });
+    clearTimeout(typingTimeout);
+    typingTimeout = setTimeout(() => socket.emit('typing_stop', { chatId: currentChatId }), 1500);
+  }
+}
+
+async function sendMessage() {
+  const input = document.getElementById('chatInput');
+  const text  = input?.value.trim();
+  if (!text || !currentChatId) return;
+  input.value = '';
+
+  // Optimistic render
+  const container = document.getElementById('chatMessages');
+  const tempMsg = { sender: { _id: user._id }, text, isSystem: false, createdAt: new Date() };
+  if (container) { container.insertAdjacentHTML('beforeend', msgHTML(tempMsg)); container.scrollTop = container.scrollHeight; }
+
+  if (socket?.connected) {
+    socket.emit('send_message', { chatId: currentChatId, text });
+  } else {
+    try { await chatsAPI.send(currentChatId, { text }); } catch(e) { toast(e.message, 'error'); }
+  }
+}
+
+/* ────────── WORKERS ───────────────────────────────────────── */
+async function loadWorkers() {
+  const grid = document.getElementById('workersGrid');
+  grid.innerHTML = '<div class="spinner"></div>';
+  try {
+    const params = { limit: 30 };
+    const search = document.getElementById('workerSearch')?.value.trim();
+    const skill  = document.getElementById('workerSkillFilter')?.value;
+    if (search) params.search = search;
+    if (skill)  params.skills = skill;
+
+    const res = await usersAPI.workers(params);
+    grid.innerHTML = '';
+    if (!res.data.length) {
+      grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><div class="empty-state-icon">👥</div><div class="empty-state-title">No workers found</div></div>`;
+      return;
+    }
+    res.data.forEach(w => {
+      grid.insertAdjacentHTML('beforeend', `
+        <div class="worker-card" onclick="openWorkerProfile('${w._id}')">
+          <div class="worker-avatar">${(w.name||'?')[0].toUpperCase()}</div>
+          <div class="worker-name">${esc(w.name)}</div>
+          <div class="worker-rating">⭐ ${w.rating?.toFixed(1)||'New'} · ${w.ratingCount||0} reviews</div>
+          <div class="worker-skills">${(w.skills||[]).slice(0,3).map(s=>`<span class="skill-chip">${s}</span>`).join('')}</div>
+          <button class="btn btn-outline btn-sm btn-full">View Profile</button>
+        </div>`);
+    });
+  } catch(e) { grid.innerHTML = `<p style="color:var(--danger);">${e.message}</p>`; }
+}
+
+let workerSearchTimeout;
+function debounceLoadWorkers() {
+  clearTimeout(workerSearchTimeout);
+  workerSearchTimeout = setTimeout(loadWorkers, 400);
+}
+
+async function openWorkerProfile(workerId) {
+  // TODO: open a worker detail modal with unlock feature
+  toast('Worker profiles coming soon', 'info');
+}
+
+/* ────────── NOTIFICATIONS ─────────────────────────────────── */
+async function loadNotifications() {
+  const list = document.getElementById('notifList');
+  list.innerHTML = '<div class="spinner"></div>';
+  try {
+    const res = await usersAPI.notifications({ limit: 30 });
+    document.getElementById('notifDot').style.display = 'none';
+    if (!res.data.length) {
+      list.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🔔</div><div class="empty-state-title">All caught up!</div><div class="empty-state-desc">No notifications yet.</div></div>`;
+      return;
+    }
+    list.innerHTML = res.data.map(n => `
+      <div style="padding:14px 0;border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:flex-start;${!n.isRead?'background:var(--student-light);border-radius:8px;padding:12px;margin-bottom:4px;':''}">
+        <div style="font-size:22px;">${notifIcon(n.type)}</div>
+        <div style="flex:1;">
+          <div style="font-weight:600;font-size:14px;font-family:var(--font-d);">${esc(n.title)}</div>
+          <div style="font-size:13px;color:var(--text-muted);margin-top:2px;">${esc(n.message)}</div>
+          <div style="font-size:11px;color:var(--text-soft);margin-top:4px;">${timeAgo(n.createdAt)}</div>
+        </div>
+      </div>`).join('');
+  } catch(e) { list.innerHTML = `<p style="color:var(--danger);">${e.message}</p>`; }
+}
+
+function notifIcon(type) {
+  const m = { new_offer:'💰', offer_accepted:'✅', offer_rejected:'❌', chat_message:'💬', job_completed:'🎉', contact_unlocked:'🔓', review_received:'⭐', system:'📢' };
+  return m[type] || '🔔';
+}
+
+async function markAllRead() {
+  await usersAPI.markNotificationsRead([]);
+  loadNotifications();
+  toast('All marked as read', 'info');
+}
+
+/* ────────── PROFILE ───────────────────────────────────────── */
+function loadProfile() {
+  document.getElementById('profileAvatar').textContent = (user.name||'?')[0].toUpperCase();
+  document.getElementById('profileName').textContent   = user.name || '—';
+  document.getElementById('profileRole').textContent   = user.role === 'worker' ? '💼 Campus Worker' : '🎓 Student';
+  document.getElementById('profileNameInput').value    = user.name || '';
+  document.getElementById('profileBio').value          = user.bio  || '';
+  document.getElementById('profilePhone').value        = user.phone || '';
+}
+
+async function saveProfile() {
+  const btn = document.getElementById('saveProfileBtn');
+  btn.disabled = true; btn.textContent = 'Saving…';
+  try {
+    const data = {
+      name:  document.getElementById('profileNameInput').value.trim(),
+      bio:   document.getElementById('profileBio').value.trim(),
+      phone: document.getElementById('profilePhone').value.trim(),
+    };
+    await usersAPI.updateProfile(data);
+    // Update local user
+    Object.assign(user, data);
+    Auth.setUser(user);
+    toast('Profile updated ✅', 'success');
+    document.getElementById('sidebarName').textContent = user.name;
+    document.getElementById('sidebarAvatar').textContent = user.name[0].toUpperCase();
+  } catch(e) { toast(e.message, 'error'); }
+  finally { btn.disabled = false; btn.textContent = 'Save Changes'; }
+}
+
+/* ────────── SOCKET ─────────────────────────────────────────── */
+function initSocketEvents() {
+  socket = initSocket();
+  if (!socket) return;
+
+  onNotification(n => {
+    toast(`${notifIcon(n.type)} ${n.title}`, 'info');
+    document.getElementById('notifDot').style.display = 'block';
+  });
+
+  onOfferAccepted(d => {
+    toast('✅ Your offer was accepted! Opening chat…', 'success');
+    setTimeout(() => { showPage('chats'); loadChats(); }, 800);
+  });
+
+  onNewMessage(m => {
+    if (currentPage === 'chats' && currentChatId === m.chat) {
+      const container = document.getElementById('chatMessages');
+      if (container && m.sender?._id !== user._id) {
+        container.insertAdjacentHTML('beforeend', msgHTML(m));
+        container.scrollTop = container.scrollHeight;
+      }
+    } else {
+      document.getElementById('notifDot').style.display = 'block';
+      const badge = document.getElementById('chatBadge');
+      if (badge) { const n = parseInt(badge.textContent||'0')+1; badge.textContent=n; badge.style.display='inline-block'; }
+    }
+  });
+
+  socket.on('user_typing', ({ chatId }) => {
+    if (chatId !== currentChatId) return;
+    const el = document.getElementById('typingIndicator');
+    if (el) el.innerHTML = `<div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>`;
+  });
+  socket.on('user_stopped_typing', () => {
+    const el = document.getElementById('typingIndicator');
+    if (el) el.innerHTML = '';
+  });
+}
+
+/* ────────── LOGOUT ────────────────────────────────────────── */
+async function handleLogout() {
+  try { await authAPI.logout(); } catch {}
+  Auth.clear();
+  window.location.href = 'login.html';
+}
+
+/* ────────── HELPERS ───────────────────────────────────────── */
+function renderJobCards(jobs, containerId, compact = false) {
+  const el = document.getElementById(containerId);
+  if (!jobs?.length) {
+    el.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📋</div><div class="empty-state-title">No jobs yet</div></div>`;
+    return;
+  }
+  el.innerHTML = `<div class="jobs-grid">${jobs.map(j => jobCardHTML(j, compact)).join('')}</div>`;
+}
+
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function openSidebar()  { document.getElementById('sidebar').classList.add('open'); document.getElementById('sidebarOverlay').style.display = 'block'; }
+function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').style.display = 'none'; }
+
+function showLoading(text='Loading…') { document.getElementById('loadingText').textContent=text; document.getElementById('loadingOverlay').classList.add('show'); }
+function hideLoading()                { document.getElementById('loadingOverlay').classList.remove('show'); }
+
+function toast(message, type='info') {
+  const container = document.getElementById('toastContainer');
+  const el        = document.createElement('div');
+  el.className    = `toast toast-${type}`;
+  el.textContent  = message;
+  container.appendChild(el);
+  setTimeout(() => el.remove(), 3800);
+}
+
+function esc(str) {
+  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function timeAgo(date) {
+  const secs = Math.floor((Date.now() - new Date(date)) / 1000);
+  if (secs < 60)  return 'just now';
+  if (secs < 3600) return `${Math.floor(secs/60)}m ago`;
+  if (secs < 86400) return `${Math.floor(secs/3600)}h ago`;
+  return `${Math.floor(secs/86400)}d ago`;
+}
+</script>
+
+</body>
+</html>

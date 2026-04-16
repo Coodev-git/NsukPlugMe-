@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register — NSUK PlugMe</title>
+  <link rel="stylesheet" href="css/app.css"/>
+</head>
+<body>
+
+<div class="auth-page">
+
+  <!-- Left panel -->
+  <div class="auth-left">
+    <div class="auth-left-inner">
+      <div class="auth-brand">
+        <div class="auth-logo-mark">P</div>
+        <span class="auth-brand-name">PlugMe</span>
+      </div>
+      <h1 class="auth-headline">Join NSUK's campus marketplace — free forever</h1>
+      <p class="auth-tagline">Students get help in minutes. Workers earn consistently. Both win.</p>
+      <div class="auth-features">
+        <div class="auth-feature">
+          <div class="auth-feature-icon">🎓</div>
+          <span class="auth-feature-text">Students: post jobs and get fast offers</span>
+        </div>
+        <div class="auth-feature">
+          <div class="auth-feature-icon">💼</div>
+          <span class="auth-feature-text">Workers: browse jobs and earn on campus</span>
+        </div>
+        <div class="auth-feature">
+          <div class="auth-feature-icon">🤖</div>
+          <span class="auth-feature-text">AI improves your job posts automatically</span>
+        </div>
+        <div class="auth-feature">
+          <div class="auth-feature-icon">⭐</div>
+          <span class="auth-feature-text">Build your reputation with every job</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right panel -->
+  <div class="auth-right">
+    <div class="auth-card">
+      <h2 class="auth-card-title">Create account</h2>
+      <p class="auth-card-sub">Join as a student or a campus worker.</p>
+
+      <!-- Role selection -->
+      <div class="role-toggle">
+        <div class="role-btn student selected" id="roleStudent" onclick="selectRole('student')">
+          <div class="role-icon">🎓</div>
+          <div class="role-name">Student</div>
+          <div class="role-desc">I need help</div>
+        </div>
+        <div class="role-btn worker" id="roleWorker" onclick="selectRole('worker')">
+          <div class="role-icon">💼</div>
+          <div class="role-name">Worker</div>
+          <div class="role-desc">I want to earn</div>
+        </div>
+      </div>
+
+      <div class="alert alert-error" id="regError">
+        <span>⚠️</span>
+        <span id="regErrorMsg">Something went wrong</span>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="name">Full Name</label>
+        <input class="form-input" type="text" id="name" placeholder="e.g. Covenant Ibrahim"/>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="email">Email Address</label>
+        <input class="form-input" type="email" id="email" placeholder="you@nsuk.edu.ng"/>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="phone">Phone Number</label>
+        <input class="form-input" type="tel" id="phone" placeholder="e.g. 08012345678"/>
+        <div class="form-hint">Used for the ₦99 contact unlock feature (workers only)</div>
+      </div>
+
+      <!-- Worker-only: skills -->
+      <div class="form-group" id="skillsGroup" style="display:none;">
+        <label class="form-label">Your Skills (pick all that apply)</label>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;" id="skillsContainer">
+          <div class="skill-toggle" data-skill="tech">💻 Tech & Repairs</div>
+          <div class="skill-toggle" data-skill="delivery">🛵 Delivery</div>
+          <div class="skill-toggle" data-skill="laundry">🧺 Laundry</div>
+          <div class="skill-toggle" data-skill="food">🍱 Food</div>
+          <div class="skill-toggle" data-skill="hair_beauty">✂️ Hair & Beauty</div>
+          <div class="skill-toggle" data-skill="printing">🖨️ Printing</div>
+          <div class="skill-toggle" data-skill="tutoring">📚 Tutoring</div>
+        </div>
+        <style>
+          .skill-toggle {
+            padding: 7px 13px; border-radius: 20px; border: 2px solid var(--border);
+            background: var(--surface); cursor: pointer; font-size: 13px; font-weight: 600;
+            transition: all .2s; user-select: none;
+          }
+          .skill-toggle.active { border-color: var(--worker); background: var(--worker-light); color: var(--worker-dark); }
+        </style>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="password">Password</label>
+        <input class="form-input" type="password" id="password" placeholder="At least 6 characters"/>
+      </div>
+
+      <button class="btn btn-blue btn-full btn-lg" id="regBtn" onclick="handleRegister()">
+        Create Account
+      </button>
+
+      <div class="auth-footer-link" style="margin-top:24px;">
+        Already have an account? <a href="login.html">Sign in →</a>
+      </div>
+      <div class="auth-footer-link" style="margin-top:10px;">
+        <a href="index.html">← Back to home</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="js/api.js"></script>
+<script>
+  if (window.PlugMe?.Auth.isLoggedIn()) window.location.href = 'app.html';
+
+  let selectedRole = 'student';
+  let selectedSkills = [];
+
+  function selectRole(role) {
+    selectedRole = role;
+    document.getElementById('roleStudent').classList.toggle('selected', role === 'student');
+    document.getElementById('roleWorker').classList.toggle('selected',  role === 'worker');
+    document.getElementById('skillsGroup').style.display = role === 'worker' ? 'block' : 'none';
+  }
+
+  // Skills toggle
+  document.querySelectorAll('.skill-toggle').forEach(el => {
+    el.addEventListener('click', () => {
+      const skill = el.dataset.skill;
+      el.classList.toggle('active');
+      if (el.classList.contains('active')) {
+        selectedSkills.push(skill);
+      } else {
+        selectedSkills = selectedSkills.filter(s => s !== skill);
+      }
+    });
+  });
+
+  async function handleRegister() {
+    const name     = document.getElementById('name').value.trim();
+    const email    = document.getElementById('email').value.trim();
+    const phone    = document.getElementById('phone').value.trim();
+    const password = document.getElementById('password').value;
+    const btn      = document.getElementById('regBtn');
+    const errBox   = document.getElementById('regError');
+    const errMsg   = document.getElementById('regErrorMsg');
+
+    errBox.classList.remove('show');
+
+    if (!name || !email || !password) {
+      errMsg.textContent = 'Name, email, and password are required.';
+      errBox.classList.add('show'); return;
+    }
+    if (password.length < 6) {
+      errMsg.textContent = 'Password must be at least 6 characters.';
+      errBox.classList.add('show'); return;
+    }
+
+    btn.disabled    = true;
+    btn.textContent = 'Creating account...';
+
+    try {
+      const body = { name, email, password, role: selectedRole, phone };
+      if (selectedRole === 'worker' && selectedSkills.length) body.skills = selectedSkills;
+
+      const res = await window.PlugMe.authAPI.register(body);
+      window.PlugMe.Auth.setTokens(res.token, res.refreshToken);
+      window.PlugMe.Auth.setUser(res.data.user);
+      window.location.href = 'app.html';
+    } catch (err) {
+      errMsg.textContent  = err.message || 'Registration failed.';
+      errBox.classList.add('show');
+      btn.disabled    = false;
+      btn.textContent = 'Create Account';
+    }
+  }
+</script>
+
+</body>
+</html>
+<script>
+  // Auto-select worker role if ?role=worker in URL
+  const urlRole = new URLSearchParams(window.location.search).get('role');
+  if (urlRole === 'worker') selectRole('worker');
+</script>
