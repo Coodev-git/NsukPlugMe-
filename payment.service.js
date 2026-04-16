@@ -3,7 +3,7 @@
 const https  = require('https');
 const logger = require('../utils/logger');
 
-const PAYSTACK_SECRET = process.env.PAYSTACK_SECRET_KEY || '';
+const PAYSTACK_SECRET = process.env.PAYMENT_KEY || '';
 const PRICE_KOBO      = parseInt(process.env.UNLOCK_PRICE_KOBO || '9900', 10); // ₦99
 
 /**
